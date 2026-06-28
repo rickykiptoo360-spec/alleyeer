@@ -5,7 +5,7 @@ import type { ActiveSymbol } from '../lib/types';
 
 interface CurrentTickDisplayProps {
   tick: Tick | null;
-  lastDigit: number | null;
+  lastDigit: number |null;
   activeSymbol: ActiveSymbol | null;
   pipSize: number;
 }
@@ -14,32 +14,52 @@ export function CurrentTickDisplay({
   tick,
   lastDigit,
   activeSymbol,
-  pipSize,
 }: CurrentTickDisplayProps) {
-  if (!tick || !activeSymbol) {
+  if (!tick || !activeSymbol || lastDigit === null) {
     return (
-      <div className="text-center py-3 sm:py-6">
-        <div className="text-xl sm:text-2xl font-mono text-muted-foreground">---</div>
+      <div className="flex justify-center py-6">
+        <div className="text-muted-foreground">Waiting for live ticks...</div>
       </div>
     );
   }
 
-  const priceStr = tick.quote.toFixed(pipSize);
-  const priceWithoutLast = priceStr.slice(0, -1);
-  const lastDigitStr = priceStr.slice(-1);
-
   return (
-    <div className="text-center py-2 sm:py-4">
-      <div className="text-2xl sm:text-3xl font-mono font-bold tracking-wide">
-        <span className="text-foreground">{priceWithoutLast}</span>
-        <span className="text-primary text-3xl sm:text-4xl">{lastDigitStr}</span>
+    <div className="w-full flex flex-col items-center py-6">
+
+      <div className="text-sm text-muted-foreground mb-4">
+        LIVE DIGIT CURSOR
       </div>
-      <div className="mt-1 sm:mt-2 inline-flex items-center gap-1.5 text-[11px] sm:text-xs text-muted-foreground">
-        <span>Last Digit:</span>
-        <span className="w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold">
+
+      <div className="flex gap-3 text-2xl font-bold font-mono">
+        {[0,1,2,3,4,5,6,7,8,9].map((digit)=>(
+          <div
+            key={digit}
+            className={`
+              w-12 h-12
+              rounded-full
+              flex items-center
+              justify-center
+              transition-all
+              duration-300
+              ${
+                digit===lastDigit
+                  ? "bg-primary text-primary-foreground scale-125 shadow-lg"
+                  : "bg-secondary text-secondary-foreground"
+              }
+            `}
+          >
+            {digit}
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-5 text-lg font-semibold">
+        Current Digit :
+        <span className="text-primary ml-2">
           {lastDigit}
         </span>
       </div>
+
     </div>
   );
-}
+  }
