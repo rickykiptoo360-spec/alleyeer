@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type { Tick } from '../lib/types';
 import type { ActiveSymbol } from '../lib/types';
+
 export function CurrentTickDisplay({
     tick,
     lastDigit,
